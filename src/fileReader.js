@@ -15,12 +15,17 @@ async function readFileContents(files, outputPath, tree) {
     hour12: false,
   })
 
+  const separator = '/'.repeat(79) // Ровно 79 слешей
+
   for (const file of files) {
+    // Дополнительная проверка на node_modules
+    if (file.includes('node_modules')) {
+      console.log(`Skipping ${file} because it is in node_modules`)
+      continue
+    }
     try {
       const content = await fs.readFile(file, 'utf-8')
-      contents.push(
-        `///////////////////////////////////////////////////////////////////////////////\n// ${file}\n///////////////////////////////////////////////////////////////////////////////\n\n${content}\n\n///////////////////////////////////////////////////////////////////////////////`
-      )
+      contents.push(`${separator}\n// ${file}\n${separator}\n\n${content}\n\n${separator}`)
     } catch (err) {
       console.warn(`Failed to read ${file}: ${err.message}`)
       errors.push(`${file}: ${err.message}`)
@@ -32,7 +37,7 @@ async function readFileContents(files, outputPath, tree) {
     output += 'Files with errors:\n' + errors.map((err) => `- ${err}`).join('\n') + '\n\n'
   }
   output += tree + '\n\n'
-  output += contents.join('\n')
+  output += contents.join('')
 
   await fs.writeFile(outputPath, output, 'utf-8')
 }

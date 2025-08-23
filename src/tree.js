@@ -12,8 +12,11 @@ function generateTree(dir, prefix = '', files = [], ignorePatterns, treeLines = 
     const isLast = index === filtered.length - 1
     const fullPath = path.join(dir, entry.name)
     const relativePath = path.relative(process.cwd(), fullPath)
-    files.push(relativePath)
     treeLines.push(`${prefix}${isLast ? '└──' : '├──'} ${entry.name}`)
+
+    if (entry.isFile()) {
+      files.push(relativePath) // Добавляем только файлы
+    }
 
     if (entry.isDirectory()) {
       generateTree(
