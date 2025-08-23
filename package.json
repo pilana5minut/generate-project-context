@@ -1,0 +1,33 @@
+{
+  "name": "generate-project-context",
+  "version": "1.0.1",
+  "description": "CLI tool to generate a project context file with directory tree and file contents",
+  "main": "src/index.js",
+  "bin": {
+    "generate-context": "src/index.js"
+  },
+  "scripts": {
+    "context": "node src/index.js"
+  },
+  "keywords": [
+    "cli",
+    "file-structure",
+    "project-context",
+    "documentation"
+  ],
+  "author": "Maxim Mogilevskiy <mogilevskiymv@gmail.com>",
+  "license": "MIT",
+  "files": [
+    "src",
+    ".ignoreList",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "commander": "^12.1.0",
+    "minimatch": "^10.0.1",
+    "open": "^8.4.2"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
