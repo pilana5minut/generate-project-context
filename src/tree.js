@@ -1,7 +1,7 @@
 const path = require('path')
 const fs = require('fs')
 
-function generateTree(dir, prefix = '', files = [], ignorePatterns) {
+function generateTree(dir, prefix = '', files = [], ignorePatterns, treeLines = []) {
   const entries = fs.readdirSync(dir, { withFileTypes: true })
   const filtered = entries.filter((entry) => {
     const fullPath = path.join(dir, entry.name)
@@ -13,14 +13,20 @@ function generateTree(dir, prefix = '', files = [], ignorePatterns) {
     const fullPath = path.join(dir, entry.name)
     const relativePath = path.relative(process.cwd(), fullPath)
     files.push(relativePath)
+    treeLines.push(`${prefix}${isLast ? '└──' : '├──'} ${entry.name}`)
 
-    console.log(`${prefix}${isLast ? '└──' : '├──'} ${entry.name}`)
     if (entry.isDirectory()) {
-      generateTree(fullPath, `${prefix}${isLast ? '    ' : '│   '}`, files, ignorePatterns)
+      generateTree(
+        fullPath,
+        `${prefix}${isLast ? '    ' : '│   '}`,
+        files,
+        ignorePatterns,
+        treeLines
+      )
     }
   })
 
-  return files
+  return { files, tree: treeLines.join('\n') }
 }
 
 module.exports = { generateTree }

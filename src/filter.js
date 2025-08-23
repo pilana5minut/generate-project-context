@@ -1,5 +1,6 @@
 const fs = require('fs/promises')
-const { minimatch } = require('minimatch') // Изменено с require('minimatch')
+const path = require('path') // Добавлен импорт path
+const { minimatch } = require('minimatch')
 const { getIgnoreListPath } = require('./utils')
 
 async function loadIgnorePatterns() {
@@ -10,16 +11,23 @@ async function loadIgnorePatterns() {
       .split('\n')
       .map((line) => line.trim())
       .filter((line) => line && !line.startsWith('#'))
-    return ['node_modules/**'].concat(patterns)
+    return ['node_modules/**', '**/node_modules/**'].concat(patterns)
   } catch (err) {
     console.error('Failed to read .ignoreList:', err.message)
-    return ['node_modules/**']
+    return ['node_modules/**', '**/node_modules/**']
   }
 }
 
 function isFileAllowed(filePath, ignorePatterns) {
-  const relativePath = filePath.replace(/\\/g, '/')
-  return !ignorePatterns.some((pattern) => minimatch(relativePath, pattern, { matchBase: true }))
+  const normalizedPath = path.normalize(filePath).replace(/\\/g, '/')
+  const isIgnored = ignorePatterns.some((pattern) => {
+    const match = minimatch(normalizedPath, pattern, { matchBase: true })
+    if (match) {
+      console.log(`Ignoring ${normalizedPath} due to pattern: ${pattern}`)
+    }
+    return match
+  })
+  return !isIgnored
 }
 
 module.exports = { loadIgnorePatterns, isFileAllowed }
