@@ -12,8 +12,18 @@ async function generateContext(startDir) {
 
   console.log('Generating project context...')
   const { files: relativeFiles, tree } = generateTree(rootDir, startDir, '', [], ignorePatterns, [])
-  // Добавляем имя стартовой директории в начало дерева
-  const treeWithRoot = path.basename(startDir) + '\n' + tree
+  // Получаем имя корневой директории
+  const rootDirName = path.basename(rootDir)
+  // Вычисляем относительный путь от корня проекта до стартовой директории
+  const relativePath = path.relative(rootDir, startDir).replace(/\\/g, '/')
+
+  // Формируем полный путь для отображения
+  let fullPath = rootDirName
+  if (relativePath && relativePath !== '.') {
+    fullPath += '/' + relativePath
+  }
+
+  const treeWithRoot = fullPath + '\n' + tree
   // Преобразуем относительные пути в абсолютные
   const absoluteFiles = relativeFiles.map((relativePath) => path.join(rootDir, relativePath))
   await readFileContents(absoluteFiles, outputPath, treeWithRoot)
