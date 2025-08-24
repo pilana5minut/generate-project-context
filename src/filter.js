@@ -20,21 +20,14 @@ async function loadIgnorePatterns() {
   }
 }
 
-function isFileAllowed(filePath, ignorePatterns) {
-  const normalizedPath = path.normalize(filePath).replace(/\\/g, '/')
-  // Проверяем, содержит ли путь node_modules
-  if (normalizedPath.includes('node_modules/')) {
-    console.log(`Ignoring ${normalizedPath} because it contains node_modules`)
-    return false
-  }
-  const isIgnored = ignorePatterns.some((pattern) => {
-    const match = minimatch(normalizedPath, pattern, { matchBase: false })
+function isFileAllowed(relativePath, ignorePatterns) {
+  return !ignorePatterns.some((pattern) => {
+    const match = minimatch(relativePath, pattern, { matchBase: true })
     if (match) {
-      console.log(`Ignoring ${normalizedPath} due to pattern: ${pattern}`)
+      console.log(`Ignoring ${relativePath} due to pattern: ${pattern}`)
     }
     return match
   })
-  return !isIgnored
 }
 
 module.exports = { loadIgnorePatterns, isFileAllowed }

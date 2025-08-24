@@ -11,7 +11,7 @@ async function generateContext(startDir) {
   const ignorePatterns = await loadIgnorePatterns()
 
   console.log('Generating project context...')
-  const { files, tree } = generateTree(rootDir, '', [], ignorePatterns) // Изменено на rootDir
+  const { files, tree } = generateTree(rootDir, rootDir, '', [], ignorePatterns, [])
   await readFileContents(files, outputPath, tree)
   console.log(`Project context written to ${outputPath}`)
 }
