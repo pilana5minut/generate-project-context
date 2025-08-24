@@ -11,12 +11,22 @@ async function loadIgnorePatterns() {
       .split('\n')
       .map((line) => line.trim())
       .filter((line) => line && !line.startsWith('#'))
-    return ['node_modules/**', '**/node_modules/**', 'node_modules/*', '**/node_modules/*'].concat(
-      patterns
-    )
+    return [
+      'node_modules/**',
+      '**/node_modules/**',
+      'node_modules/*',
+      '**/node_modules/*',
+      'project_context.txt',
+    ].concat(patterns)
   } catch (err) {
     console.error('Failed to read .ignoreList:', err.message)
-    return ['node_modules/**', '**/node_modules/**', 'node_modules/*', '**/node_modules/*']
+    return [
+      'node_modules/**',
+      '**/node_modules/**',
+      'node_modules/*',
+      '**/node_modules/*',
+      'project_context.txt',
+    ]
   }
 }
 
