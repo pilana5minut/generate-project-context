@@ -11,8 +11,12 @@ async function generateContext(startDir) {
   const ignorePatterns = await loadIgnorePatterns()
 
   console.log('Generating project context...')
-  const { files, tree } = generateTree(rootDir, rootDir, '', [], ignorePatterns, [])
-  await readFileContents(files, outputPath, tree)
+  const { files: relativeFiles, tree } = generateTree(rootDir, startDir, '', [], ignorePatterns, [])
+  // Добавляем имя стартовой директории в начало дерева
+  const treeWithRoot = path.basename(startDir) + '\n' + tree
+  // Преобразуем относительные пути в абсолютные
+  const absoluteFiles = relativeFiles.map((relativePath) => path.join(rootDir, relativePath))
+  await readFileContents(absoluteFiles, outputPath, treeWithRoot)
   console.log(`Project context written to ${outputPath}`)
 }
 

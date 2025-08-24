@@ -18,14 +18,24 @@ async function readFileContents(files, outputPath, tree) {
   const separator = '/'.repeat(79) // Ровно 79 слешей
 
   for (const file of files) {
-    // Дополнительная проверка на node_modules
-    if (file.includes('node_modules')) {
-      console.log(`Skipping ${file} because it is in node_modules`)
-      continue
-    }
     try {
+      // Проверяем, является ли файл бинарным
+      const stats = await fs.stat(file)
+      if (stats.isDirectory()) {
+        continue
+      }
+
+      // Пропускаем node_modules
+      if (file.includes('node_modules')) {
+        console.log(`Skipping ${file} because it is in node_modules`)
+        continue
+      }
+
+      // Пытаемся прочитать как текстовый файл
       const content = await fs.readFile(file, 'utf-8')
-      contents.push(`${separator}\n// ${file}\n${separator}\n\n${content}\n\n${separator}`)
+      // Получаем относительный путь для отображения
+      const relativePath = path.relative(process.cwd(), file)
+      contents.push(`${separator}\n// ${relativePath}\n${separator}\n\n${content}\n\n${separator}`)
     } catch (err) {
       console.warn(`Failed to read ${file}: ${err.message}`)
       errors.push(`${file}: ${err.message}`)
