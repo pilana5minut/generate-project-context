@@ -12,19 +12,31 @@ async function loadIgnorePatterns() {
       .map((line) => line.trim())
       .filter((line) => line && !line.startsWith('#'))
     return [
+      'node_modules',
       'node_modules/**',
       '**/node_modules/**',
       'node_modules/*',
       '**/node_modules/*',
+      '.git/**',
+      '**/.git/**',
+      '.git',
+      '.gitignore',
+      'package-lock.json',
       'project_context.txt',
     ].concat(patterns)
   } catch (err) {
     console.error('Failed to read .ignoreList:', err.message)
     return [
+      'node_modules',
       'node_modules/**',
       '**/node_modules/**',
       'node_modules/*',
       '**/node_modules/*',
+      '.git/**',
+      '**/.git/**',
+      '.git',
+      '.gitignore',
+      'package-lock.json',
       'project_context.txt',
     ]
   }

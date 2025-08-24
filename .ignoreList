@@ -1,4 +1,8 @@
-node_modules
-.git
-.gitignore
-package-lock.json
+# Automatically ignored files and directories:
+# - node_modules (automatically ignored)
+# - .git (automatically ignored)
+# - .gitignore (automatically ignored)
+# - package-lock.json (automatically ignored)
+# - project_context.txt (automatically ignored)
+
+# Add additional patterns to ignore here, if necessary
