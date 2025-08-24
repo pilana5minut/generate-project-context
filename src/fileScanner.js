@@ -23,7 +23,17 @@ async function generateContext(startDir) {
     fullPath += '/' + relativePath
   }
 
-  const treeWithRoot = fullPath + '\n' + tree
+  // Вычисляем длину пути до родительской директории
+  const parentPathLength = fullPath.length - path.basename(startDir).length
+  // Создаем отступ для выравнивания
+  const indent = ' '.repeat(parentPathLength)
+
+  // Добавляем отступ к каждой строке дерева
+  const indentedTree = tree
+    .split('\n')
+    .map((line) => indent + line)
+    .join('\n')
+  const treeWithRoot = fullPath + '\n' + indentedTree
   // Преобразуем относительные пути в абсолютные
   const absoluteFiles = relativeFiles.map((relativePath) => path.join(rootDir, relativePath))
   await readFileContents(absoluteFiles, outputPath, treeWithRoot)
