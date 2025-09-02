@@ -8,7 +8,7 @@ const { readFileContents } = require('./fileReader')
 
 async function generateContext(startDir) {
   const rootDir = await findProjectRoot(startDir)
-  const outputPath = path.join(rootDir, 'project_context.md') // Изменено с .txt на .md
+  const outputPath = path.join(rootDir, 'project_context.md')
   const ignorePatterns = await loadIgnorePatterns()
 
   console.log('Generating project context...')
@@ -30,9 +30,11 @@ async function generateContext(startDir) {
   let filesToProcess = []
 
   if (isFromRoot) {
+    // Только полное дерево, если запуск из корня
     treeOutput = `## Complete project structure:\nBelow is a tree structure of the entire project as a whole.\n\`\`\`bash\n${fullTreeWithRoot}\n\`\`\`\n\n`
     filesToProcess = allFiles
   } else {
+    // Полное дерево и поддерево, если запуск из вложенной директории
     const { files: subFiles, tree: subTree } = generateTree(
       rootDir,
       startDir,
@@ -57,12 +59,11 @@ async function generateContext(startDir) {
     const subTreeWithRoot = fullPath + '\n' + indentedSubTree
 
     treeOutput = `## Complete project structure:\nBelow is a tree structure of the entire project as a whole.\n\`\`\`bash\n${fullTreeWithRoot}\n\`\`\`\n\n## Subtree from current directory:\nBelow is a tree structure of only part of the project.\n\`\`\`bash\n${subTreeWithRoot}\n\`\`\`\n\n`
-
     filesToProcess = subFiles
   }
 
   const absoluteFiles = filesToProcess.map((relativePath) => path.join(rootDir, relativePath))
-  await readFileContents(absoluteFiles, outputPath, treeOutput, filesToProcess.length)
+  await readFileContents(absoluteFiles, outputPath, treeOutput, filesToProcess.length, isFromRoot)
   console.log(`Project context written to ${outputPath}`)
 }
 

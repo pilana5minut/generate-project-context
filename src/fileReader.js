@@ -20,14 +20,12 @@ async function isTextFile(filePath) {
   }
 }
 
-// Функция для определения языка кодового блока по расширению файла
 function getCodeBlockLanguage(filePath) {
   const extension = path.extname(filePath).toLowerCase()
-  // Возвращаем расширение без точки как язык, или пустую строку, если расширения нет
   return extension ? extension.slice(1) : ''
 }
 
-async function readFileContents(files, outputPath, treeOutput, fileCount) {
+async function readFileContents(files, outputPath, treeOutput, fileCount, isFromRoot) {
   const errors = []
   const contents = []
   const timestamp = new Date().toLocaleString('en-GB', {
@@ -78,7 +76,11 @@ async function readFileContents(files, outputPath, treeOutput, fileCount) {
   }
   output += treeOutput
   if (contents.length > 0) {
-    output += `## Code files included in the above subtree\nBelow is the code for all files included in the above subtree.\nTotal number of files presented here: **${fileCount}**\n\n`
+    if (isFromRoot) {
+      output += `## Files with the code for the entire project\nBelow is the code for all project files.\nTotal number of files presented here: **${fileCount}**\n\n`
+    } else {
+      output += `## Code files included in the above subtree\nBelow is the code for all files included in the above subtree.\nTotal number of files presented here: **${fileCount}**\n\n`
+    }
   }
   output += contents.join('\n')
 

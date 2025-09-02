@@ -1,6 +1,6 @@
 {
   "name": "generate-project-context",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "CLI tool to generate a project context file with directory tree and file contents",
   "main": "src/index.js",
   "bin": {
