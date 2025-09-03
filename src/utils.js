@@ -1,3 +1,4 @@
+// src/utils.js
 const fs = require('fs/promises')
 const path = require('path')
 const open = require('open')
@@ -22,7 +23,16 @@ function getIgnoreListPath() {
 
 async function createIgnoreList() {
   const ignoreListPath = getIgnoreListPath()
-  await fs.writeFile(ignoreListPath, 'node_modules/\n', 'utf-8')
+  const defaultContent = `# Automatically ignored files and directories:
+# - node_modules (automatically ignored)
+# - .git (automatically ignored)
+# - .gitignore (automatically ignored)
+# - package-lock.json (automatically ignored)
+# - project_context.md (automatically ignored)
+# Add additional patterns to ignore here, if necessary
+node_modules/
+`
+  await fs.writeFile(ignoreListPath, defaultContent, 'utf-8')
   console.log('Created .ignoreList at:', ignoreListPath)
 }
 

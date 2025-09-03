@@ -1,3 +1,4 @@
+// src/filter.js
 const fs = require('fs/promises')
 const path = require('path')
 const { minimatch } = require('minimatch')
@@ -22,7 +23,7 @@ async function loadIgnorePatterns() {
       '.git',
       '.gitignore',
       'package-lock.json',
-      'project_context.txt',
+      'project_context.md', // Изменено с project_context.txt на project_context.md
     ].concat(patterns)
   } catch (err) {
     console.error('Failed to read .ignoreList:', err.message)
@@ -37,7 +38,7 @@ async function loadIgnorePatterns() {
       '.git',
       '.gitignore',
       'package-lock.json',
-      'project_context.txt',
+      'project_context.md', // Изменено с project_context.txt на project_context.md
     ]
   }
 }

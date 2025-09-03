@@ -3,6 +3,6 @@
 # - .git (automatically ignored)
 # - .gitignore (automatically ignored)
 # - package-lock.json (automatically ignored)
-# - project_context.txt (automatically ignored)
+# - project_context.md (automatically ignored)
 
 # Add additional patterns to ignore here, if necessary
