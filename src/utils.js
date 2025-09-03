@@ -24,13 +24,9 @@ function getIgnoreListPath() {
 async function createIgnoreList() {
   const ignoreListPath = getIgnoreListPath()
   const defaultContent = `# Automatically ignored files and directories:
-# - node_modules (automatically ignored)
-# - .git (automatically ignored)
-# - .gitignore (automatically ignored)
-# - package-lock.json (automatically ignored)
-# - project_context.md (automatically ignored)
+# - node_modules, .git, dist, build, out, coverage, .cache, .parcel-cache, .vite, logs, log, tmp, temp, .vscode, .idea
+# - .gitignore, package-lock.json, project_context.md, yarn.lock, pnpm-lock.yaml, .DS_Store, .env, .env.local, .env.development, .env.production, npm-debug.log, yarn-error.log, yarn-debug.log, .eslintcache, tsconfig.tsbuildinfo
 # Add additional patterns to ignore here, if necessary
-node_modules/
 `
   await fs.writeFile(ignoreListPath, defaultContent, 'utf-8')
   console.log('Created .ignoreList at:', ignoreListPath)
