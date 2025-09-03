@@ -1,253 +1,322 @@
-# generate-context
+# Generate Project Context
 
-A CLI tool to generate a `project_context.txt` file containing a directory tree and the contents of all non-ignored files in a project. Designed for frontend developers to document project structure and code for quick reference, code reviews, or sharing with AI tools/collaborators.
+A CLI tool for automatically generating project context files with a tree structure of directories and the contents of all files in a convenient markdown format.
+
+## What is it?
+
+`generate-project-context` is a command-line utility that scans your project structure and creates a single markdown file (`project_context.md`) containing:
+
+- Complete tree structure of the project
+- Contents of all text files with syntax highlighting
+- Automatic ignoring of unnecessary files and directories
+- Support for working from both project root and subdirectories
 
 ## Purpose
 
-The `generate-context` package helps frontend developers (using JavaScript, TypeScript, React, etc.) create a single text file ( `project_context.txt` ) that includes:
-* A timestamp of when the file was generated (in local timezone).
-* A list of files that could not be read (if any).
-* A `tree-cli`-style representation of the project directory structure.
-* The contents of all files not excluded by `.ignoreList`.
+The utility is especially useful for:
 
-This is useful for:
-* Documenting project structure and code.
-* Preparing context for AI-based code analysis.
-* Sharing project snapshots with teammates.
+- **Working with AI assistants** — providing complete project context for code analysis
+- **Project documentation** — quickly creating a snapshot of structure and content
+- **Code Review** — reviewing the entire codebase in a single file
+- **Onboarding new developers** — familiarizing with project architecture
+- **Archiving** — preserving project state at a specific point in time
 
-## Installation
+## Installation and Usage
 
-**Install as a development dependency:**
+### Usage without installation (recommended)
 
- `npm install --save-dev generate-project-context`
+The simplest way is to use `npx` without installing the package:
 
-## Usage
+```bash
+# Generate context for current project
+npx generate-project-context
 
-**Run the tool in your project directory:**
-
- `npx generate-context`
-
-* Scans the current directory.
-* Applies .ignoreList filters and automatic ignore patterns.
-* Creates project_context.txt in the project root (where package.json is, or current directory if not found).
-
-**To edit the .ignoreList file:**
-
- `npx generate-context ignore`
-
-* Opens .ignoreList in your default code editor (e.g., VS Code).
-* If .ignoreList is missing, creates it with default content and opens it.
-
-## Configuration
-
-The tool uses a single configuration file, `.ignoreList` , located in `node_modules/generate-context/.ignoreList` . This file specifies additional files and directories to exclude from the output.
-
-## Automatic Ignore Patterns
-
-The following files and directories are automatically ignored and cannot be included:
-
-* `node_modules/` (and all subdirectories)
-* `.git/` (and all subdirectories)
-* `.gitignore`
-* `package-lock.json`
-* `project_context.txt`
-
-## `.ignoreList` Format
-
-* Each line is a pattern to ignore.
-* Use `#` for comments to disable rules.
-* Supported patterns:
-  + Directories: e.g.,  `dist/` (ignores the `dist` directory and its contents).
-  + Files: e.g.,  `build.js` (ignores a specific file).
-  + Extensions: e.g.,  `*.log` (ignores all files with `.log` extension).
-  + Glob patterns: e.g.,  `**/test/**` (ignores all files in `test` directories at any depth).
-
-#### Default `.ignoreList` :
-
-```txt
-# Automatically ignored files and directories:
-# - node_modules (automatically ignored)
-# - .git (automatically ignored)
-# - .gitignore (automatically ignored)
-# - package-lock.json (automatically ignored)
-# - project_context.txt (automatically ignored)
-
-# Add additional patterns to ignore here, if necessary
+# Create/edit ignore file
+npx generate-project-context ignore
 ```
 
-#### Example `.ignoreList` :
+### Local installation
 
-```txt
-# Automatically ignored files and directories:
-# - node_modules (automatically ignored)
-# - .git (automatically ignored)
-# - .gitignore (automatically ignored)
-# - package-lock.json (automatically ignored)
-# - project_context.txt (automatically ignored)
+```bash
+# Install in project
+npm install --save-dev generate-project-context
 
-# Add additional patterns to ignore here, if necessary
-dist/
+# Use via npm scripts
+npm run context
+```
+
+### Global installation
+
+```bash
+# Global installation
+npm install -g generate-project-context
+
+# Use from any directory
+generate-context
+```
+
+## Main commands
+
+### Context generation
+
+```bash
+# From project root (creates complete structure)
+npx generate-project-context
+
+# From any subdirectory (creates structure + focus on current directory)
+cd src/components
+npx generate-project-context
+```
+
+### Managing ignore files
+
+```bash
+# Create or open .ignoreList for editing
+npx generate-project-context ignore
+```
+
+## File ignoring system
+
+The utility automatically ignores standard files and directories:
+- `node_modules/`
+- `.git/`
+- `.gitignore`
+- `package-lock.json`
+- `project_context.md` (avoiding recursion)
+
+### Configuring additional ignore patterns
+
+To ignore additional files and directories, create a `.ignoreList` file in the project root. The file uses glob patterns (similar to `.gitignore`).
+
+#### Basic pattern writing rules:
+
+**Comments**
+```
+# This is a comment - lines starting with # are ignored
+```
+
+**Ignoring specific files**
+```
+config.local.js          # Ignore config.local.js file
+.env                     # Ignore .env file
+secret.key              # Ignore secret.key file
+```
+
+**Ignoring by extension**
+```
+*.log                   # All files with .log extension
+*.tmp                   # All temporary files
+*.cache                 # All cache files
+```
+
+**Ignoring directories**
+```
+dist/                   # dist directory and all its contents
+build/                  # build directory and all its contents
+temp/                   # temp directory and all its contents
+```
+
+**Recursive ignoring (anywhere in project)**
+```
+**/logs/**              # All logs directories anywhere in project
+**/node_modules/**      # All node_modules (at any level)
+**/*.test.js            # All test files anywhere
+```
+
+**Ignoring at specific level**
+```
+src/temp/               # Only temp directory inside src
+docs/*.draft.md         # Only draft files in docs directory
+```
+
+#### Complete example of `.ignoreList` file:
+
+```
+# Automatically generated files
+dist/**
+build/**
+out/**
+
+# Logs and temporary files
 *.log
-build.js
-**/test/**
-# temp.js
+*.tmp
+*.cache
+temp/
+
+# Sensitive data
+.env
+.env.local
+.env.production
+config/secrets.json
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Testing and code coverage
+coverage/**
+**/.nyc_output/**
+**/*.test.js.snap
+
+# Framework-specific directories
+.next/**              # Next.js
+.nuxt/**              # Nuxt.js
+.svelte-kit/**        # SvelteKit
+dist-electron/**      # Electron
+
+# Documentation (if not needed in context)
+docs/api/**
+**/*.draft.md
+
+# Large data files
+**/*.sql
+**/*.dump
+data/large-dataset.json
 ```
 
-### Using `.ignoreList`
+#### Usage tips:
 
-1. Run `npx generate-context ignore` to open `.ignoreList`.
-2. Add patterns for directories, files, or extensions to exclude.
-3. Comment lines with `#` to disable specific rules.
-4. Save the file. The next `npx generate-context` run will use the updated rules.
+1. **Start simple** — add patterns as needed
+2. **Use comments** — group patterns by categories for convenience
+3. **Test patterns** — run the utility and see what gets ignored in the output
+4. **Be careful with `**`** — such patterns may exclude more files than expected
 
-#### Notes:
+The utility will output information about which files are being ignored to the console, helping debug patterns.
 
-* The .ignoreList file is created automatically when the package is installed.
-* If .ignoreList is missing or inaccessible, both commands will fail with an error and prompt to run `npx generate-context ignore` to create it.
-* Glob patterns follow the minimatch syntax (see [minimatch documentation](https://www.npmjs.com/package/minimatch)).
+## Examples of resulting file
 
-## Running from Subdirectories
+### Project structure example
 
-The tool can be run from any subdirectory within the project:
+```markdown
+# Generated on: 03/09/2025, 14:02:24
 
-* **From project root**: Shows complete project structure and all files.
-* **From subdirectory**: Shows both complete project structure and subtree from current directory, but only processes files from the current directory and its subdirectories.
-
-## Output Format
-
-The `project_context.txt` file contains:
-
-1. **Timestamp**: When the file was generated in local timezone (e.g., `Generated on: 24/08/2025, 19:44:57`).
-2. **Errors** (if any): Files that could not be read, with error descriptions.
-3. **Directory Tree**: A `tree-cli`-style representation of the project structure with IDE-like sorting (directories first, then files, both in alphabetical order).
-4. **File Contents**: Contents of all non-ignored files, separated by headers.
-
-### Tree Structure Sorting
-
-The directory tree follows IDE-like sorting:
-* **Directories first** (in alphabetical order)
-* **Files second** (in alphabetical order)
-* This rule applies recursively to all nested levels
-
-### File Headers Format
-
-Each file is preceded by a header with the following format:
-
-```
-// filename.js
-//////////////////////////////
-
-[file content]
-
-```
-
-### Binary File Handling
-
-Binary files (images, executables, etc.) are detected automatically and show an informational message instead of content:
-
-```
-// image.png
-//////////////////////////////
-
-[Binary file content - not displayed]
-
-```
-
-#### Example `project_context.txt` (from project root):
-
-```txt
-Generated on: 24/08/2025, 19:44:57
-
-Complete project structure:
-
-my-project
+## Complete project structure:
+Below is a tree structure of the entire project as a whole.
+```bash
+my-awesome-project
 ├── src
 │   ├── components
-│   │   ├── Button.js
-│   │   └── Header.js
-│   ├── App.js
-│   └── main.js
-├── .ignoreList
-├── LICENSE
+│   │   ├── Header.js
+│   │   └── Footer.js
+│   ├── utils
+│   │   └── helpers.js
+│   └── index.js
+├── tests
+│   └── app.test.js
 ├── package.json
 └── README.md
+```
 
-// src\App.js
-//////////////////////////////
+## Files with the code for the entire project
+Below is the code for all project files.
+Total number of files presented here: **6**
 
-import Button from './components/Button';
-function App() {
-  return <Button />;
-}
-export default App;
+### src/components/Header.js
+```js
+import React from 'react';
 
-// src\main.js
-//////////////////////////////
+const Header = ({ title }) => {
+  return (
+    <header className="header">
+      <h1>{title}</h1>
+    </header>
+  );
+};
 
-console.log('Hello, world!');
+export default Header;
+```
 
-// package.json
-//////////////////////////////
+### src/utils/helpers.js
+```js
+export const formatDate = (date) => {
+  return new Intl.DateTimeFormat('en-US').format(new Date(date));
+};
 
+export const debounce = (func, wait) => {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+};
+```
+
+### package.json
+```json
 {
-  "name": "my-project",
+  "name": "my-awesome-project",
   "version": "1.0.0",
+  "description": "Awesome project description",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node src/main.js"
+    "start": "node src/index.js",
+    "test": "jest"
+  },
+  "dependencies": {
+    "react": "^18.0.0"
   }
 }
 ```
+```
 
-#### Example `project_context.txt` (from subdirectory):
+### Example of working from subdirectory
 
-```txt
-Generated on: 24/08/2025, 19:45:24
+When run from a subdirectory, two structures are generated:
+1. Complete project structure
+2. Focused structure of current subdirectory
 
-Complete project structure:
-
+```markdown
+## Complete project structure:
+Below is a tree structure of the entire project as a whole.
+```bash
 my-project
 ├── src
 │   ├── components
-│   │   ├── Button.js
-│   │   └── Header.js
-│   ├── App.js
-│   └── main.js
-├── .ignoreList
-├── LICENSE
-├── package.json
-└── README.md
-
-Subtree from current directory:
-
-my-project/src
-            ├── components
-            │   ├── Button.js
-            │   └── Header.js
-            ├── App.js
-            └── main.js
-
-// App.js
-//////////////////////////////
-
-import Button from './components/Button';
-function App() {
-  return <Button />;
-}
-export default App;
-
-// main.js
-//////////////////////////////
-
-console.log('Hello, world!');
+│   └── utils
+└── package.json
 ```
 
-## Error Handling
+## Subtree from current directory:
+Below is a tree structure of only part of the project.
+```bash
+my-project/src/components
+├── Header.js
+├── Footer.js
+└── Button.js
+```
+```
 
-* If .ignoreList is missing, the tool prompts to run `npx generate-context ignore`.
-* If a file cannot be read (e.g., binary or permission issues), it is skipped with a console warning.
-* All errors are listed at the top of project_context.txt.
-* Files are read and written in UTF-8 encoding.
+## Technical features
+
+- **Auto-detection of project root** by presence of `package.json`
+- **Smart file type detection** — distinguishing text and binary files
+- **Syntax highlighting** — automatic language detection by file extension
+- **Cross-platform** — correct operation on Windows, macOS, Linux
+- **Asynchronous processing** — efficient work with large projects
 
 ## Requirements
 
-* Node.js >= 16.0.0
+- Node.js >= 16.0.0
+- npm or yarn
+
+## License
+
+MIT License. Details in [LICENSE](LICENSE) file.
+
+## Author
+
+Maxim Mogilevskiy <mogilevskiymv@gmail.com>
+
+## Support
+
+If you have questions or suggestions for improvement, please create issues in the project repository.
+
+---
+
+**Tip**: Add `project_context.md` to `.gitignore` if you don't want to commit generated files to the repository.
