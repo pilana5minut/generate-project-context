@@ -25,14 +25,14 @@ npm install --save-dev generate-project-context
 После установки вы можете запустить утилиту командой:
 
 ```bash
-generate-context
+npx generate-context
 ```
 
 или если вы установили её глобально:
 
 ```bash
 npm install -g generate-project-context
-generate-context
+npx generate-context
 ```
 
 Утилита выполнит следующие действия:
@@ -58,10 +58,11 @@ generate-context
 
 - `node_modules` - директория с установленными npm пакетами
 - `package-lock.json` - файл с фиксированными версиями зависимостей
+- `.git` - файлы Git репозитория
 
 Для управления списком игнорируемых файлов вы можете:
 
-1. Запустить команду `generate-context ignore` для создания или открытия файла .ignoreList
+1. Запустить команду `npx generate-context ignore` для создания или открытия файла .ignoreList
 2. Или вручную отредактировать файл .ignoreList, который находится в директории утилиты
 
 В файле .ignoreList можно использовать шаблоны для указания файлов и директорий, которые должны быть исключены из анализа.
