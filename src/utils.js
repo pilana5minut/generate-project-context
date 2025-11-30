@@ -23,8 +23,9 @@ function getIgnoreListPath() {
 
 async function createIgnoreList() {
   const ignoreListPath = getIgnoreListPath()
-  const defaultContent = `node_modules
+  const defaultContent = `project_context.md
 package-lock.json
+node_modules
 .git
 `
   await fs.writeFile(ignoreListPath, defaultContent, 'utf-8')
