@@ -1,6 +1,6 @@
 {
   "name": "generate-project-context",
-  "version": "1.0.22",
+  "version": "1.0.25",
   "description": "CLI tool to generate a project context file with directory tree and file contents",
   "main": "src/index.js",
   "bin": {
@@ -10,7 +10,8 @@
     "context": "node src/index.js"
   },
   "keywords": [
-    "cli",
+    "LLM-context-creation",
+    "CLI-utility",
     "file-structure",
     "project-context",
     "documentation"

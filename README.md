@@ -1,51 +1,54 @@
-# Утилита генерации контекста проекта
+# Project Context Generation Utility
 
-## Цели использования
+## Purpose
 
-Эта утилита предназначена для автоматической генерации файла `project_context.md`, который содержит полную информацию о структуре и содержимом проекта. Основные цели использования:
+This utility is designed to automatically generate the `project_context.md` file, which contains complete information about the structure and contents of the project. The main purposes are:
 
-1. **Создание полного описания проекта**: Утилита сканирует все файлы в проекте и создает файл с полным содержимым всех файлов, что позволяет получить полное представление о проекте.
+1. **Creating a full project description**:
+   The utility scans all files in the project and creates a file containing the full content of all files, which allows you to get a complete understanding of the project.
 
-2. **Облегчение работы с LLM**: Файл `project_context.md` может быть использован для загрузки в языковые модели (LLM) для анализа, рефакторинга или генерации кода на основе существующего проекта.
+2. **Facilitating work with LLMs**:
+   The `project_context.md` file can be used for uploading into language models (LLMs) for analysis, refactoring, or code generation based on an existing project.
 
-3. **Документирование структуры проекта**: Утилита создает иерархическое представление структуры файлов и директорий проекта, что помогает в понимании архитектуры проекта.
+3. **Documenting the project structure**:
+   The utility generates a hierarchical representation of the project's file and directory structure, helping to better understand the project's architecture.
 
-## Установка
+## Installation
 
-Установите утилиту как dev зависимость в ваш проект:
+Install the utility as a dev dependency into your project:
 
 ```bash
 npm install --save-dev generate-project-context
 ```
 
-## Использование
+## Usage
 
-После установки вы можете запустить утилиту командой:
+After installation, you can run the utility with the following command:
 
 ```bash
 npx generate-context
 ```
 
-Утилита выполнит следующие действия:
+The utility will perform the following actions:
 
-1. Рекурсивно просканирует все файлы от текущей директории до самой глубоко вложенной
-2. Исключит файлы, указанные в списке .ignoreList (находится в директории пакета)
-3. Создаст в корне проекта файл `project_context.md` с полным содержимым всех файлов проекта
+1. Recursively scan all files from the current directory down to the deepest level
+2. Exclude files listed in `.ignoreList` (located in the package directory)
+3. Create a `project_context.md` file in the project root containing the complete contents of all project files
 
-Для обновления контекста проекта просто запустите утилиту снова - она перезапишет файл `project_context.md` с актуальной информацией.
+To update the project context, simply run the utility again — it will overwrite the `project_context.md` file with up-to-date information.
 
-## Фильтрация файлов
+## File Filtering
 
-Утилита автоматически исключает из анализа файлы, указанные в списке `.ignoreList`, который находится в директории пакета (node_modules). Файл создается при первом запуске утилиты. По умолчанию в этот список входят:
+The utility automatically excludes from analysis the files listed in the `.ignoreList`, which is located in the package directory (`node_modules`). The file is created during the first run of the utility. By default, the list includes:
 
-- `project_context.md` - файл с полным содержимым всех файлов проекта
-- `package-lock.json` - файл с фиксированными версиями зависимостей
-- `node_modules` - директория с установленными npm пакетами
-- `.git` - файлы Git репозитория
+- `project_context.md` — the file containing the full contents of all project files
+- `package-lock.json` — the file with fixed dependency versions
+- `node_modules` — the directory containing installed npm packages
+- `.git` — Git repository files
 
-Для управления списком игнорируемых файлов вы можете:
+To manage the list of ignored files, you can:
 
-1. Запустить команду `npx generate-context ignore` для создания или открытия файла .ignoreList
-2. Или вручную отредактировать файл .ignoreList, который находится в директории пакета
+1. Run `npx generate-context ignore` to create or open the `.ignoreList` file
+2. Or manually edit the `.ignoreList` file located in the package directory
 
-В файле .ignoreList можно использовать шаблоны для указания файлов и директорий, которые должны быть исключены из анализа.
+You can use patterns in `.ignoreList` to specify files and directories that should be excluded from analysis.
